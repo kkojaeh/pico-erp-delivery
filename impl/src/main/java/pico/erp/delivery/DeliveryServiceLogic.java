@@ -43,9 +43,11 @@ public class DeliveryServiceLogic implements DeliveryService {
   @Autowired
   private DeliveryMapper mapper;
 
+  @Lazy
   @Autowired
   private MailDeliverySendService mailDeliverySendService;
 
+  @Lazy
   @Autowired
   private FaxDeliverySendService faxDeliverySendService;
 
