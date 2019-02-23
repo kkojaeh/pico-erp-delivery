@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import pico.erp.delivery.subject.DeliverySubjectId;
@@ -16,6 +17,7 @@ public interface DeliveryRequests {
   @Data
   @NoArgsConstructor
   @AllArgsConstructor
+  @Builder
   class CreateRequest<K> {
 
     @Valid
@@ -35,6 +37,7 @@ public interface DeliveryRequests {
   @Data
   @NoArgsConstructor
   @AllArgsConstructor
+  @Builder
   class DeliverRequest {
 
     @Valid
