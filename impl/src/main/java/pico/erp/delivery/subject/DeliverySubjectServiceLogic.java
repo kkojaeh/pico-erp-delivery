@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -103,8 +104,10 @@ public class DeliverySubjectServiceLogic implements DeliverySubjectService, Deli
     val deliveryType = deliverySubjectRepository.findBy(request.getId())
       .orElseThrow(DeliverySubjectExceptions.NotFoundException::new);
     val definition = mapping.get(request.getId());
-    val titleTemplate = deliveryType.getTitleTemplate();
-    val bodyTemplate = deliveryType.getBodyTemplate();
+    val titleTemplate = Optional.ofNullable(deliveryType.getTitleTemplate())
+      .orElse("");
+    val bodyTemplate = Optional.ofNullable(deliveryType.getBodyTemplate())
+      .orElse("");
     val context = definition.getContext(request.getKey());
     val attachments = definition.getAttachments(request.getKey());
     val titleMustache = mustacheFactory
