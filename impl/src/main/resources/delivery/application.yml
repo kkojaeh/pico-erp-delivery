@@ -11,10 +11,10 @@ spring:
     basename: delivery-messages
     encoding: UTF-8
   datasource:
-    url: ${ATTACHMENT_DATASOURCE_URL:${DATASOURCE_URL:jdbc:p6spy:hsqldb:mem:delivery}}
-    driver-class-name: ${ATTACHMENT_DATASOURCE_DRIVER_CLASS_NAME:${DATASOURCE_DRIVER_CLASS_NAME:com.p6spy.engine.spy.P6SpyDriver}}
-    username: ${ATTACHMENT_DATASOURCE_USERNAME:${DATASOURCE_USERNAME:as}}
-    password: ${ATTACHMENT_DATASOURCE_PASSWORD:${DATASOURCE_PASSWORD:null}}
+    url: ${DELIVERY_DATASOURCE_URL:${DATASOURCE_URL:jdbc:p6spy:hsqldb:mem:delivery}}
+    driver-class-name: ${DELIVERY_DATASOURCE_DRIVER_CLASS_NAME:${DATASOURCE_DRIVER_CLASS_NAME:com.p6spy.engine.spy.P6SpyDriver}}
+    username: ${DELIVERY_DATASOURCE_USERNAME:${DATASOURCE_USERNAME:as}}
+    password: ${DELIVERY_DATASOURCE_PASSWORD:${DATASOURCE_PASSWORD:null}}
     hikari:
       maximum-pool-size: 4
   jpa:
