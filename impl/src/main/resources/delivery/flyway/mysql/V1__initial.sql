@@ -1,7 +1,7 @@
 create table dlv_delivery (
 	id binary(16) not null,
 	created_date datetime,
-	_key varchar(100),
+	subject_key varchar(100),
 	subject_id varchar(50),
 	primary key (id)
 ) engine=InnoDB;
