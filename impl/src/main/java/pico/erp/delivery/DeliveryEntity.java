@@ -47,7 +47,7 @@ public class DeliveryEntity implements Serializable {
   })
   DeliverySubjectId subjectId;
 
-  @Column(name = "subject_key", length = TypeDefinitions.EXTERNAL_ID_LENGTH)
+  @Column(name = "SUBJECT_KEY", length = TypeDefinitions.EXTERNAL_ID_LENGTH)
   String key;
 
   @Column(updatable = false)
