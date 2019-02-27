@@ -4,6 +4,7 @@ import java.time.OffsetDateTime;
 import lombok.Data;
 import pico.erp.delivery.DeliveryId;
 import pico.erp.delivery.DeliveryMethodKind;
+import pico.erp.user.UserId;
 
 @Data
 public class DeliveryResultData {
@@ -18,6 +19,8 @@ public class DeliveryResultData {
 
   boolean successful;
 
-  OffsetDateTime createdDate;
+  OffsetDateTime requestedDate;
+
+  UserId requesterId;
 
 }

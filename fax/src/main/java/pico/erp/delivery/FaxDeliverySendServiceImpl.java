@@ -11,7 +11,7 @@ import pico.erp.fax.FaxId;
 import pico.erp.fax.FaxRequests;
 import pico.erp.fax.FaxService;
 
-public class TwilioAwsS3FaxDeliverySendService implements FaxDeliverySendService {
+public class FaxDeliverySendServiceImpl implements FaxDeliverySendService {
 
   @Lazy
   @Autowired
