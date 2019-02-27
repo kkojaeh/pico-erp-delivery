@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.delivery.result.DeliveryResultData;
+import pico.erp.delivery.result.DeliveryResultEvents;
 import pico.erp.delivery.result.DeliveryResultId;
 import pico.erp.delivery.result.DeliveryResultRequests;
 import pico.erp.delivery.result.DeliveryResultService;
@@ -67,6 +68,7 @@ public class DeliveryServiceLogic implements DeliveryService {
   public DeliveryResultData deliver(DeliveryRequests.DeliverRequest request) {
     val delivery = deliveryRepository.findBy(request.getId())
       .orElseThrow(DeliveryExceptions.NotFoundException::new);
+    val resultId = DeliveryResultId.generate();
     val subjectId = delivery.getSubjectId();
     val key = deliverySubjectService.convert(subjectId, delivery.getKey());
     val address = request.getAddress();
@@ -93,13 +95,13 @@ public class DeliveryServiceLogic implements DeliveryService {
       val writer = new StringWriter();
       t.printStackTrace(new PrintWriter(writer));
       eventPublisher.publishEvent(
-        new DeliveryEvents.ErrorOccurredEvent(delivery.getId(), writer.toString())
+        new DeliveryResultEvents.ErrorOccurredEvent(resultId, writer.toString())
       );
       successful = false;
     }
     val result = deliveryResultService.create(
       DeliveryResultRequests.CreateRequest.builder()
-        .id(DeliveryResultId.generate())
+        .id(resultId)
         .deliveryId(delivery.getId())
         .method(method)
         .address(address)

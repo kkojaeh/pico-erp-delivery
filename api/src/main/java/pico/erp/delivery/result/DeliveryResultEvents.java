@@ -20,4 +20,20 @@ public interface DeliveryResultEvents {
 
   }
 
+  @ToString
+  @Value
+  class ErrorOccurredEvent implements Event {
+
+    public final static String CHANNEL = "event.delivery-result.error-occurred";
+
+    private DeliveryResultId id;
+
+    private String stacktrace;
+
+    public String channel() {
+      return CHANNEL;
+    }
+
+  }
+
 }
