@@ -83,4 +83,10 @@ public class DeliveryApplication implements ApplicationStarter {
     return Roles.DELIVERY_CHARGER;
   }
 
+  @Bean
+  @Public
+  public Role deliveryManager() {
+    return Roles.DELIVERY_MANAGER;
+  }
+
 }

@@ -14,7 +14,8 @@ public final class DeliveryApi {
   public enum Roles implements Role {
 
     DELIVERY_ACCESSOR,
-    DELIVERY_CHARGER;
+    DELIVERY_CHARGER,
+    DELIVERY_MANAGER;
 
     @Id
     @Getter
