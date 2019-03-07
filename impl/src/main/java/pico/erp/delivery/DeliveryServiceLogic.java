@@ -1,7 +1,5 @@
 package pico.erp.delivery;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -9,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import pico.erp.delivery.result.DeliveryResultData;
-import pico.erp.delivery.result.DeliveryResultEvents;
 import pico.erp.delivery.result.DeliveryResultId;
 import pico.erp.delivery.result.DeliveryResultRequests;
 import pico.erp.delivery.result.DeliveryResultService;
@@ -92,24 +89,21 @@ public class DeliveryServiceLogic implements DeliveryService {
         faxDeliverySendService.send(sendRequest, message);
       }
     } catch (Throwable t) {
-      val writer = new StringWriter();
-      t.printStackTrace(new PrintWriter(writer));
-      eventPublisher.publishEvent(
-        new DeliveryResultEvents.ErrorOccurredEvent(resultId, writer.toString())
-      );
       successful = false;
+      throw t;
+    } finally {
+      val result = deliveryResultService.create(
+        DeliveryResultRequests.CreateRequest.builder()
+          .id(resultId)
+          .deliveryId(delivery.getId())
+          .method(method)
+          .address(address)
+          .successful(successful)
+          .requesterId(request.getRequesterId())
+          .build()
+      );
+      return result;
     }
-    val result = deliveryResultService.create(
-      DeliveryResultRequests.CreateRequest.builder()
-        .id(resultId)
-        .deliveryId(delivery.getId())
-        .method(method)
-        .address(address)
-        .successful(successful)
-        .requesterId(request.getRequesterId())
-        .build()
-    );
-    return result;
   }
 
   @Override
