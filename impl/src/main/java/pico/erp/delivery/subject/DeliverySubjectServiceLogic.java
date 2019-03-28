@@ -9,25 +9,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.SpringBootComponentReadyEvent;
+import kkojaeh.spring.boot.component.Take;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import pico.erp.delivery.DeliveryInitializer.DeliveryInitializable;
 import pico.erp.delivery.message.DeliveryMessage;
 import pico.erp.delivery.subject.DeliverySubjectRequests.MakeRequest;
-import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 
 @SuppressWarnings("Duplicates")
 @Service
-@Public
+@Give
 @Transactional
 @Validated
-public class DeliverySubjectServiceLogic implements DeliverySubjectService, DeliveryInitializable {
+public class DeliverySubjectServiceLogic implements DeliverySubjectService,
+  ApplicationListener<SpringBootComponentReadyEvent> {
 
   private final Map<DeliverySubjectId, DeliverySubjectDefinition> mapping = new HashMap<>();
 
@@ -40,8 +42,7 @@ public class DeliverySubjectServiceLogic implements DeliverySubjectService, Deli
   @Autowired
   private DeliverySubjectMapper mapper;
 
-  @Lazy
-  @Autowired
+  @Take(required = false)
   private List<DeliverySubjectDefinition> definitions;
 
   @Autowired
@@ -78,28 +79,6 @@ public class DeliverySubjectServiceLogic implements DeliverySubjectService, Deli
   }
 
   @Override
-  public void initialize() {
-    val targets = definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d));
-    mapping.putAll(
-      definitions.stream()
-        .collect(Collectors.toMap(d -> d.getId(), d -> d))
-    );
-    deliverySubjectRepository.findAll()
-      .forEach(deliveryType -> targets.remove(deliveryType.getId()));
-    targets.values().forEach(definition -> {
-      val deliveryType = new DeliverySubject();
-      val request = DeliverySubjectMessages.Create.Request.builder()
-        .id(definition.getId())
-        .name(definition.getName())
-        .build();
-      val response = deliveryType.apply(request);
-      deliverySubjectRepository.create(deliveryType);
-      eventPublisher.publishEvents(response.getEvents());
-    });
-
-  }
-
-  @Override
   public DeliveryMessage make(MakeRequest request) {
     val deliveryType = deliverySubjectRepository.findBy(request.getId())
       .orElseThrow(DeliverySubjectExceptions.NotFoundException::new);
@@ -119,6 +98,27 @@ public class DeliverySubjectServiceLogic implements DeliverySubjectService, Deli
       .body(write(bodyMustache, context))
       .attachments(attachments)
       .build();
+  }
+
+  @Override
+  public void onApplicationEvent(SpringBootComponentReadyEvent event) {
+    val targets = definitions.stream().collect(Collectors.toMap(d -> d.getId(), d -> d));
+    mapping.putAll(
+      definitions.stream()
+        .collect(Collectors.toMap(d -> d.getId(), d -> d))
+    );
+    deliverySubjectRepository.findAll()
+      .forEach(deliveryType -> targets.remove(deliveryType.getId()));
+    targets.values().forEach(definition -> {
+      val deliveryType = new DeliverySubject();
+      val request = DeliverySubjectMessages.Create.Request.builder()
+        .id(definition.getId())
+        .name(definition.getName())
+        .build();
+      val response = deliveryType.apply(request);
+      deliverySubjectRepository.create(deliveryType);
+      eventPublisher.publishEvents(response.getEvents());
+    });
   }
 
   @Override

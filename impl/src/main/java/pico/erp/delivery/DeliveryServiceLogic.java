@@ -1,5 +1,6 @@
 package pico.erp.delivery;
 
+import kkojaeh.spring.boot.component.Give;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -15,11 +16,10 @@ import pico.erp.delivery.send.FaxDeliverySendService;
 import pico.erp.delivery.send.MailDeliverySendService;
 import pico.erp.delivery.subject.DeliverySubjectRequests;
 import pico.erp.delivery.subject.DeliverySubjectService;
-import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 
 @Service
-@Public
+@Give
 @Transactional
 @Validated
 public class DeliveryServiceLogic implements DeliveryService {

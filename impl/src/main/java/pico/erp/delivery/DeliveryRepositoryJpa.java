@@ -31,23 +31,23 @@ public class DeliveryRepositoryJpa implements DeliveryRepository {
 
   @Override
   public void deleteBy(DeliveryId id) {
-    repository.delete(id);
+    repository.deleteById(id);
   }
 
   @Override
   public boolean exists(DeliveryId id) {
-    return repository.exists(id);
+    return repository.existsById(id);
   }
 
   @Override
   public Optional<Delivery> findBy(DeliveryId id) {
-    return Optional.ofNullable(repository.findOne(id))
+    return repository.findById(id)
       .map(mapper::domain);
   }
 
   @Override
   public void update(Delivery delivery) {
-    val entity = repository.findOne(delivery.getId());
+    val entity = repository.findById(delivery.getId()).get();
     mapper.pass(mapper.entity(delivery), entity);
     repository.save(entity);
   }

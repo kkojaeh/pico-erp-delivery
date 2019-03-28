@@ -2,7 +2,7 @@ package pico.erp.delivery;
 
 
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
@@ -51,6 +51,6 @@ public class DeliveryEntity implements Serializable {
   String key;
 
   @Column(updatable = false)
-  OffsetDateTime createdDate;
+  LocalDateTime createdDate;
 
 }

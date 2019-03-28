@@ -1,6 +1,6 @@
 package pico.erp.delivery;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import lombok.Data;
 import pico.erp.delivery.subject.DeliverySubjectId;
 
@@ -11,7 +11,7 @@ public class DeliveryData {
 
   DeliverySubjectId subjectId;
 
-  OffsetDateTime createdDate;
+  LocalDateTime createdDate;
 
   String key;
 
