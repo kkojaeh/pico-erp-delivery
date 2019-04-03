@@ -2,7 +2,7 @@ package pico.erp.delivery;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
-import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.ComponentBean;
 import kkojaeh.spring.boot.component.SpringBootComponent;
 import kkojaeh.spring.boot.component.SpringBootComponentBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import pico.erp.ComponentDefinition;
 import pico.erp.delivery.DeliveryApi.Roles;
 import pico.erp.shared.SharedConfiguration;
 import pico.erp.shared.data.Role;
@@ -30,12 +31,18 @@ import pico.erp.shared.data.Role;
 @Import(value = {
   SharedConfiguration.class
 })
-public class DeliveryApplication {
+public class DeliveryApplication implements ComponentDefinition {
 
   public static void main(String[] args) {
     new SpringBootComponentBuilder()
       .component(DeliveryApplication.class)
       .run(args);
+  }
+
+  @Bean
+  @ComponentBean(host = false)
+  public Role deliveryAccessor() {
+    return Roles.DELIVERY_ACCESSOR;
   }
 
   @Bean
@@ -45,21 +52,20 @@ public class DeliveryApplication {
   }
 
   @Bean
-  @Give
-  public Role deliveryAccessor() {
-    return Roles.DELIVERY_ACCESSOR;
-  }
-
-  @Bean
-  @Give
+  @ComponentBean(host = false)
   public Role deliveryCharger() {
     return Roles.DELIVERY_CHARGER;
   }
 
   @Bean
-  @Give
+  @ComponentBean(host = false)
   public Role deliveryManager() {
     return Roles.DELIVERY_MANAGER;
+  }
+
+  @Override
+  public Class<?> getComponentClass() {
+    return DeliveryApplication.class;
   }
 
 }

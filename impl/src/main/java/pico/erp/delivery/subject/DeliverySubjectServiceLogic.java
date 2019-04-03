@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import kkojaeh.spring.boot.component.Give;
+import kkojaeh.spring.boot.component.ComponentAutowired;
+import kkojaeh.spring.boot.component.ComponentBean;
 import kkojaeh.spring.boot.component.SpringBootComponentReadyEvent;
-import kkojaeh.spring.boot.component.Take;
 import lombok.SneakyThrows;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import pico.erp.shared.event.EventPublisher;
 
 @SuppressWarnings("Duplicates")
 @Service
-@Give
+@ComponentBean
 @Transactional
 @Validated
 public class DeliverySubjectServiceLogic implements DeliverySubjectService,
@@ -42,7 +42,7 @@ public class DeliverySubjectServiceLogic implements DeliverySubjectService,
   @Autowired
   private DeliverySubjectMapper mapper;
 
-  @Take(required = false)
+  @ComponentAutowired(required = false)
   private List<DeliverySubjectDefinition> definitions;
 
   @Autowired
