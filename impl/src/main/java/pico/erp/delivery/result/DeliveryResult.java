@@ -1,7 +1,7 @@
 package pico.erp.delivery.result;
 
 import java.io.Serializable;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import javax.persistence.Id;
 import lombok.AccessLevel;
@@ -39,7 +39,7 @@ public class DeliveryResult implements Serializable {
 
   boolean successful;
 
-  OffsetDateTime requestedDate;
+  LocalDateTime requestedDate;
 
   UserId requesterId;
 
@@ -50,7 +50,7 @@ public class DeliveryResult implements Serializable {
     address = request.getAddress();
     successful = request.isSuccessful();
     requesterId = request.getRequesterId();
-    requestedDate = OffsetDateTime.now();
+    requestedDate = LocalDateTime.now();
     return new DeliveryMessages.Create.Response(
       Arrays.asList(new DeliveryResultEvents.CreatedEvent(id))
     );

@@ -2,62 +2,47 @@ package pico.erp.delivery;
 
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheFactory;
-import java.util.Properties;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import lombok.SneakyThrows;
+import kkojaeh.spring.boot.component.ComponentBean;
+import kkojaeh.spring.boot.component.SpringBootComponent;
+import kkojaeh.spring.boot.component.SpringBootComponentBuilder;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import pico.erp.ComponentDefinition;
 import pico.erp.delivery.DeliveryApi.Roles;
-import pico.erp.shared.ApplicationId;
-import pico.erp.shared.ApplicationStarter;
-import pico.erp.shared.Public;
-import pico.erp.shared.SpringBootConfigs;
+import pico.erp.shared.SharedConfiguration;
 import pico.erp.shared.data.Role;
-import pico.erp.shared.impl.ApplicationImpl;
-import pico.erp.user.UserApi;
 
 @Slf4j
-@SpringBootConfigs
-public class DeliveryApplication implements ApplicationStarter {
+@SpringBootComponent("delivery")
+@EntityScan
+@EnableAspectJAutoProxy
+@EnableTransactionManagement
+@EnableJpaRepositories
+@EnableJpaAuditing(auditorAwareRef = "auditorAware", dateTimeProviderRef = "dateTimeProvider")
+@SpringBootApplication
+@Import(value = {
+  SharedConfiguration.class
+})
+public class DeliveryApplication implements ComponentDefinition {
 
-  public static final String CONFIG_NAME = "delivery/application";
-
-  public static final Properties DEFAULT_PROPERTIES = new Properties();
-
-  static {
-    DEFAULT_PROPERTIES.put("spring.config.name", CONFIG_NAME);
-  }
-
-  public static SpringApplication application() {
-    return new SpringApplicationBuilder(DeliveryApplication.class)
-      .properties(DEFAULT_PROPERTIES)
-      .web(false)
-      .build();
-  }
-
-  @SneakyThrows
   public static void main(String[] args) {
-    application().run(args);
+    new SpringBootComponentBuilder()
+      .component(DeliveryApplication.class)
+      .run(args);
   }
 
-  @Override
-  public Set<ApplicationId> getDependencies() {
-    return Stream.of(UserApi.ID).collect(Collectors.toSet());
-  }
-
-  @Override
-  public ApplicationId getId() {
-    return DeliveryApi.ID;
-  }
-
-  @Override
-  public boolean isWeb() {
-    return false;
+  @Bean
+  @ComponentBean(host = false)
+  public Role deliveryAccessor() {
+    return Roles.DELIVERY_ACCESSOR;
   }
 
   @Bean
@@ -66,27 +51,21 @@ public class DeliveryApplication implements ApplicationStarter {
     return factory;
   }
 
-  @Override
-  public pico.erp.shared.Application start(String... args) {
-    return new ApplicationImpl(application().run(args));
-  }
-
   @Bean
-  @Public
-  public Role deliveryAccessor() {
-    return Roles.DELIVERY_ACCESSOR;
-  }
-
-  @Bean
-  @Public
+  @ComponentBean(host = false)
   public Role deliveryCharger() {
     return Roles.DELIVERY_CHARGER;
   }
 
   @Bean
-  @Public
+  @ComponentBean(host = false)
   public Role deliveryManager() {
     return Roles.DELIVERY_MANAGER;
+  }
+
+  @Override
+  public Class<?> getComponentClass() {
+    return DeliveryApplication.class;
   }
 
 }

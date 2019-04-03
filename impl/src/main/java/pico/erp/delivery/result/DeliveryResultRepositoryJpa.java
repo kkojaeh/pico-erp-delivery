@@ -39,12 +39,12 @@ public class DeliveryResultRepositoryJpa implements DeliveryResultRepository {
 
   @Override
   public void deleteBy(DeliveryResultId id) {
-    repository.delete(id);
+    repository.deleteById(id);
   }
 
   @Override
   public boolean exists(DeliveryResultId id) {
-    return repository.exists(id);
+    return repository.existsById(id);
   }
 
   @Override
@@ -55,13 +55,13 @@ public class DeliveryResultRepositoryJpa implements DeliveryResultRepository {
 
   @Override
   public Optional<DeliveryResult> findBy(DeliveryResultId id) {
-    return Optional.ofNullable(repository.findOne(id))
+    return repository.findById(id)
       .map(mapper::jpa);
   }
 
   @Override
   public void update(DeliveryResult deliveryResult) {
-    val entity = repository.findOne(deliveryResult.getId());
+    val entity = repository.findById(deliveryResult.getId()).get();
     mapper.pass(mapper.jpa(deliveryResult), entity);
     repository.save(entity);
   }

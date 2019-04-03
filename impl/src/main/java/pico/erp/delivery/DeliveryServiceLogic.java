@@ -1,5 +1,7 @@
 package pico.erp.delivery;
 
+import kkojaeh.spring.boot.component.ComponentAutowired;
+import kkojaeh.spring.boot.component.ComponentBean;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -15,11 +17,10 @@ import pico.erp.delivery.send.FaxDeliverySendService;
 import pico.erp.delivery.send.MailDeliverySendService;
 import pico.erp.delivery.subject.DeliverySubjectRequests;
 import pico.erp.delivery.subject.DeliverySubjectService;
-import pico.erp.shared.Public;
 import pico.erp.shared.event.EventPublisher;
 
 @Service
-@Public
+@ComponentBean
 @Transactional
 @Validated
 public class DeliveryServiceLogic implements DeliveryService {
@@ -41,12 +42,10 @@ public class DeliveryServiceLogic implements DeliveryService {
   @Autowired
   private DeliveryMapper mapper;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired(required = false)
   private MailDeliverySendService mailDeliverySendService;
 
-  @Lazy
-  @Autowired
+  @ComponentAutowired(required = false)
   private FaxDeliverySendService faxDeliverySendService;
 
   @Override
