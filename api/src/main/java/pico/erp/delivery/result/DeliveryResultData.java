@@ -1,6 +1,6 @@
 package pico.erp.delivery.result;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import lombok.Data;
 import pico.erp.delivery.DeliveryId;
 import pico.erp.delivery.DeliveryMethodKind;
@@ -19,7 +19,7 @@ public class DeliveryResultData {
 
   boolean successful;
 
-  LocalDateTime requestedDate;
+  OffsetDateTime requestedDate;
 
   UserId requesterId;
 
